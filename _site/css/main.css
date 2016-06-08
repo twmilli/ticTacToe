@@ -1,6 +1,6 @@
 body{
   background-color: #3b5373;
-  margin-top: 10rem;
+  margin-top: 5rem;
   color:white;
 }
 .menu{
@@ -130,7 +130,8 @@ body{
 }
 
 h2{
-  display: none;
+  visibility: hidden;
+  padding-bottom: 1em;
 }
 
 .modal-content{
