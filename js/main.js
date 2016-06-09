@@ -33,6 +33,7 @@ function startGame(playerElement, comp) {
             $("#dispText").text("You Win!");
             $("#dispText").css('visibility', 'visible');
             setTimeout(resetGame, 2000);
+            return;
         }
 
         if (isTie(board)) {
@@ -40,6 +41,7 @@ function startGame(playerElement, comp) {
             $("#dispText").text("You tied, maybe next time");
             $("#dispText").css('visibility', 'visible');
             setTimeout(resetGame, 2000);
+            return;
         }
 
         if (isWin(comp.element, board)) {
@@ -48,6 +50,7 @@ function startGame(playerElement, comp) {
             $("#dispText").text("Nice try, you lost!");
             $("#dispText").css('visibility', 'visible');
             setTimeout(resetGame, 2000);
+            return;
         }
         if (!playerTurn) {
             compMove(comp, board);
