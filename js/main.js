@@ -27,7 +27,7 @@ function startGame(playerElement, comp) {
     var game;
 
     function gameLoop() {
-        if isOver(board){
+        if (isOver(board)){
           return;
         }
 
