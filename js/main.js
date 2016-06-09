@@ -27,6 +27,10 @@ function startGame(playerElement, comp) {
     var game;
 
     function gameLoop() {
+        if isOver(board){
+          return;
+        }
+
         if (isWin(playerElement, board)) {
             clearInterval(game);
             showWin(playerElement, board);
