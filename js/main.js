@@ -27,9 +27,6 @@ function startGame(playerElement, comp) {
     var game;
 
     function gameLoop() {
-        if (isOver(board)){
-          return;
-        }
 
         if (isWin(playerElement, board)) {
             clearInterval(game);
@@ -55,6 +52,9 @@ function startGame(playerElement, comp) {
             $("#dispText").css('visibility', 'visible');
             setTimeout(resetGame, 2000);
             return;
+        }
+        if (isOver(board)){
+          return;
         }
         if (!playerTurn) {
             compMove(comp, board);
