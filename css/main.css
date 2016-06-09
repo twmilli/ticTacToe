@@ -2,6 +2,7 @@ body{
   background-color: #3b5373;
   margin-top: 5rem;
   color:white;
+  font-family: 'Ubuntu', sans-serif;
 }
 .menu{
   width: 60%;
@@ -31,8 +32,9 @@ body{
   width: 33%;
   border: 1px solid gray;
   display: inline-block;
-  color: rgb(15, 213, 112);
+  color: #0fd570;
 }
+
 
 .left{
   border-left: none !important;
@@ -149,7 +151,14 @@ h2{
 .modal-body button{
   width: 50%;
   height: 10rem;
+}
+
+.modal-body button.green{
   background-color: rgb(65, 191, 119);
+}
+
+.modal-body button.red{
+  background-color: #c23434;
 }
 
 .reset{

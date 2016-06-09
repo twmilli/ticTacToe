@@ -1,5 +1,4 @@
-/*to do: change color when someone winMoves
-show move on mouse hover
+/*to do:
 light animation to clean things up.
 */
 
@@ -9,12 +8,10 @@ $(document).ready(function() {
         var comp = {};
         var playerElement = $('input[name=choice]:checked').attr("id");
         comp.element = $('input[name=choice]:not(:checked)').attr("id");
-
         var difficulty = $("input[name=diff]:checked").attr("id");
         $("#menu").hide();
         $("#board-view").show();
         comp["diff"] = difficulty;
-        console.log(comp.diff);
         game = startGame(playerElement, comp);
     });
 
@@ -24,7 +21,7 @@ $("#play").text("test");
 
 function startGame(playerElement, comp) {
     $("#reset-container").hide();
-    var updateTime = 100;
+    var updateTime = 500;
     var board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     var playerTurn = true;
     var game;
@@ -32,54 +29,46 @@ function startGame(playerElement, comp) {
     function gameLoop() {
         if (isWin(playerElement, board)) {
             clearInterval(game);
+            showWin(playerElement, board);
             $("#dispText").text("You Win!");
             $("#dispText").css('visibility', 'visible');
-            resetGame();
-            return;
+            setTimeout(resetGame, 2000);
         }
 
-        if (isTie(board)){
-          clearInterval(game);
-          $("#dispText").text("You tied, maybe next time");
-          $("#dispText").css('visibility', 'visible');
-          resetGame();
-          return;
+        if (isTie(board)) {
+            clearInterval(game);
+            $("#dispText").text("You tied, maybe next time");
+            $("#dispText").css('visibility', 'visible');
+            setTimeout(resetGame, 2000);
         }
 
-        if (isWin(comp.element, board)){
-          clearInterval(game);
-          $("#dispText").text("Nice try, you lost!");
-          $("#dispText").css('visibility', 'visible');
-          resetGame();
-          return;
+        if (isWin(comp.element, board)) {
+            clearInterval(game);
+            showWin(comp.element, board);
+            $("#dispText").text("Nice try, you lost!");
+            $("#dispText").css('visibility', 'visible');
+            setTimeout(resetGame, 2000);
         }
-
         if (!playerTurn) {
             compMove(comp, board);
+            updateFromModel(board);
             playerTurn = true;
             return;
         }
         $("#board").click(function(event) {
-            var id = $(event.target).attr("id");
+            var id = $(event.target).attr("name");
+
             if (id !== undefined && playerTurn && board[id] == 0) {
                 board[id] = playerElement;
-                playerTurn = false;
                 updateFromModel(board);
+                playerTurn = false;
                 return;
             }
         });
-
     }
 
     game = setInterval(gameLoop, updateTime);
 
-}
-
-function place(id, element, board) {
-    if (board[id] == 0) {
-        board[id] = element;
-        $("#" + id).text(element);
-    }
 }
 
 function isTie(board) {
@@ -108,10 +97,33 @@ function isWin(element, board) {
         var b = combo[1];
         var c = combo[2];
         if (board[a] == element && board[b] == element && board[c] == element) {
-            return true
+            return true;
         }
     }
-    return false
+    return false;
+}
+
+function blink(id) {
+    $('#' + id)
+        .fadeOut(300)
+        .fadeIn(300)
+        .fadeOut(300)
+        .fadeIn(300)
+        .fadeOut(300)
+        .fadeIn(300)
+        .fadeOut(300)
+        .fadeIn(300)
+        .fadeOut(300)
+        .fadeIn(300);
+}
+
+function colorElements(elements) {
+    for (var i = 0; i < elements.length; i++) {
+        var id = elements[i];
+        var element = document.getElementById(id);
+        element.style.color = "#c23434";
+        blink(id);
+    }
 }
 
 function compMove(comp, board) {
@@ -122,7 +134,6 @@ function compMove(comp, board) {
     } else {
         minimax(board, comp.element, comp.element);
     }
-    updateFromModel(board)
 }
 
 function randMove(element, board) {
@@ -150,7 +161,7 @@ function smartMove(element, board) {
 
 function smartScore(board, move, element, opponent) {
     board[move] = element;
-    if (isWin(element,board)) {
+    if (isWin(element, board)) {
         return 4;
     }
     board[move] = opponent;
@@ -171,7 +182,7 @@ function minimax(board, player, turn) {
     var moves = [];
     var boardCopy = [];
     if (isOver(board)) {
-      return score(board, player);
+        return score(board, player);
     }
 
     var currMoves = getMoves(board);
@@ -185,7 +196,6 @@ function minimax(board, player, turn) {
         var max_score_index = scores.indexOf(Math.max.apply(null, scores));
         var move = moves[max_score_index];
         board[move] = player;
-        console.log(scores);
         return scores[max_score_index];
     } else {
         var min_score_index = scores.indexOf(Math.min.apply(null, scores));
@@ -207,8 +217,8 @@ function getMoves(board) {
 }
 
 function isOver(board) {
-    if (isWin('X', board) || isWin('O', board) || isTie(board)){
-      return true;
+    if (isWin('X', board) || isWin('O', board) || isTie(board)) {
+        return true;
     }
     return false;
 }
@@ -233,9 +243,9 @@ function score(board, player) {
 function updateFromModel(board) {
     for (var i = 0; i < board.length; i++) {
         if (board[i] == 'X') {
-            $("#" + i).text('X');
+            $("#" + i).text('X')
         } else if (board[i] == 'O') {
-            $("#" + i).text('O');
+            $("#" + i).text('O')
         }
     }
 }
@@ -247,11 +257,37 @@ function resetGame() {
         $("#menu").show();
         $("#board-view").hide();
         for (var i = 0; i < 9; i++) {
-            $("#" + i).text("");
+            var $element = $("#" + i);
+            $element.text("");
+            $element.css('color', '#0fd570');
         }
     });
     $("#reset-container").show();
     $("#reset").on("click", function() {
         $("#replayModal").modal('show');
     });
+}
+
+function showWin(element, board) {
+    var combinations = [
+        [0, 1, 2],
+        [0, 4, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [2, 4, 6],
+        [3, 4, 5],
+        [6, 7, 8]
+    ];
+    for (var i = 0; i < combinations.length; i++) {
+        var combo = combinations[i];
+        var a = combo[0];
+        var b = combo[1];
+        var c = combo[2];
+        if (board[a] == element && board[b] == element && board[c] == element) {
+            colorElements([a, b, c]);
+            return true;
+        }
+    }
+    return false;
 }
